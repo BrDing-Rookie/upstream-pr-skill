@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 安装 upstream-pr skill:把 skill/ 复制到 ~/.claude/skills/upstream-pr/,
-# 并在 ~/.octo-pr-watch/config 不存在时从 config.example 初始化(不覆盖已有)。
+# 并在 ~/.upstream-pr-watch/config 不存在时从 config.example 初始化(不覆盖已有)。
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -11,7 +11,7 @@ cp "$HERE/skill/scripts/"*.sh "$SKILL_DST/scripts/"
 chmod +x "$SKILL_DST/scripts/"*.sh
 echo "skill 安装到 $SKILL_DST"
 
-CFG_DIR="${OCTO_PR_WATCH_DIR:-$HOME/.octo-pr-watch}"
+CFG_DIR="${PR_WATCH_DIR:-$HOME/.upstream-pr-watch}"
 mkdir -p "$CFG_DIR"
 if [ -f "$CFG_DIR/config" ]; then
   echo "config 已存在,保留不动:$CFG_DIR/config"

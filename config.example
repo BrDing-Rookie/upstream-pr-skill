@@ -1,9 +1,9 @@
 # upstream-pr skill — 配置样例
-# 复制为 ~/.octo-pr-watch/config 并填入真实值,chmod 600。
+# 复制为 ~/.upstream-pr-watch/config 并填入真实值,chmod 600。
 # 真实 config 含 webhook 密钥,务必勿提交(已被 .gitignore 忽略)。
 
 # IM incoming webhook(出站通知端点,POST {"content":"<markdown>"});必填,https
-OCTO_WEBHOOK_URL='https://<your-im-host>/api/v1/incoming-webhooks/<id>/<token>'
+WEBHOOK_URL='https://<your-im-host>/api/v1/incoming-webhooks/<id>/<token>'
 
 # 目标上游仓库(base)与你的 fork owner(head);必填
 UPSTREAM='<org>/<repo>'

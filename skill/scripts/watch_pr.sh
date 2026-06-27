@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
-# upstream-pr / watch_pr.sh — poll a PR and push octo-webhook notifications on
+# upstream-pr / watch_pr.sh — poll a PR and push IM webhook notifications on
 # request-changes reviews / approvals / merge / close, then self-terminate.
 #
 #   watch_pr.sh --pr N [--repo O/R] [--interval S] [--events ...] [--detach]
 #
 # --detach re-execs itself under setsid (daemon, survives the agent session).
-# Notifications POST {"content":"<markdown>"} to OCTO_WEBHOOK_URL.
+# Notifications POST {"content":"<markdown>"} to WEBHOOK_URL.
 set -uo pipefail
 
-CFG="${OCTO_PR_WATCH_DIR:-$HOME/.octo-pr-watch}/config"
+CFG="${PR_WATCH_DIR:-$HOME/.upstream-pr-watch}/config"
 [ -f "$CFG" ] && . "$CFG"
-: "${UPSTREAM:?UPSTREAM 未配置(见 ~/.octo-pr-watch/config)}"
+: "${UPSTREAM:?UPSTREAM 未配置(见 ~/.upstream-pr-watch/config)}"
 : "${POLL_INTERVAL:=90}"
 : "${WATCH_EVENTS:=request_changes,approved,merged,closed}"
 : "${MAX_AGE_DAYS:=14}"
@@ -27,9 +27,9 @@ while [ $# -gt 0 ]; do case "$1" in
 esac; done
 
 [ -n "$PR" ] || { echo "missing --pr" >&2; exit 2; }
-: "${OCTO_WEBHOOK_URL:?OCTO_WEBHOOK_URL 未配置(见 ~/.octo-pr-watch/config)}"
+: "${WEBHOOK_URL:?WEBHOOK_URL 未配置(见 ~/.upstream-pr-watch/config)}"
 
-BASE_DIR="${OCTO_PR_WATCH_DIR:-$HOME/.octo-pr-watch}"
+BASE_DIR="${PR_WATCH_DIR:-$HOME/.upstream-pr-watch}"
 SLUG="$(echo "$REPO" | tr '/' '_')__${PR}"
 STATE_DIR="$BASE_DIR/$SLUG"
 mkdir -p "$STATE_DIR"
@@ -63,7 +63,7 @@ notify() {
   # callers write "\n" as a literal escape for readability; turn it into a real
   # newline so the webhook JSON carries a true line break (IM renders markdown).
   local md="${1//\\n/$'\n'}"
-  curl -sS -m 20 -X POST "$OCTO_WEBHOOK_URL" -H 'Content-Type: application/json' \
+  curl -sS -m 20 -X POST "$WEBHOOK_URL" -H 'Content-Type: application/json' \
     --data "$(jq -nc --arg c "$md" '{content:$c}')" >/dev/null \
     || echo "$(date -Is) notify FAILED" >&2
 }

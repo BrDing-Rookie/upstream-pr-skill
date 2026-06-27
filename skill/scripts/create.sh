@@ -9,10 +9,10 @@
 # On failure prints the raw gh error to stderr and exits non-zero.
 set -uo pipefail
 
-CFG="${OCTO_PR_WATCH_DIR:-$HOME/.octo-pr-watch}/config"
+CFG="${PR_WATCH_DIR:-$HOME/.upstream-pr-watch}/config"
 [ -f "$CFG" ] && . "$CFG"
-: "${UPSTREAM:?UPSTREAM 未配置(见 ~/.octo-pr-watch/config)}"
-: "${FORK_OWNER:?FORK_OWNER 未配置(见 ~/.octo-pr-watch/config)}"
+: "${UPSTREAM:?UPSTREAM 未配置(见 ~/.upstream-pr-watch/config)}"
+: "${FORK_OWNER:?FORK_OWNER 未配置(见 ~/.upstream-pr-watch/config)}"
 
 ITITLE="" IBODY="" PTITLE="" PBODY="" BRANCH="" LABEL="" ONLY_ISSUE=0
 while [ $# -gt 0 ]; do case "$1" in

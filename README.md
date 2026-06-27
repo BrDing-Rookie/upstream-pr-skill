@@ -16,7 +16,7 @@ skill/
     create.sh           # gh issue create → 注入 Fixes #N → gh pr create(fork→upstream)
     watch_pr.sh         # 守护进程:轮询 + diff + webhook 通知 + 终态退出
     watchctl.sh         # list / status / stop / stop-all / cleanup
-config.example          # 配置样例(复制为 ~/.octo-pr-watch/config 后填真实值)
+config.example          # 配置样例(复制为 ~/.upstream-pr-watch/config 后填真实值)
 install.sh              # 复制 skill 到 ~/.claude/skills/ + 初始化 config
 ```
 
@@ -24,18 +24,18 @@ install.sh              # 复制 skill 到 ~/.claude/skills/ + 初始化 config
 
 ```bash
 ./install.sh
-# 然后编辑 ~/.octo-pr-watch/config 填入真实值:
-#   OCTO_WEBHOOK_URL / UPSTREAM / FORK_OWNER
+# 然后编辑 ~/.upstream-pr-watch/config 填入真实值:
+#   WEBHOOK_URL / UPSTREAM / FORK_OWNER
 # 并确保环境里有 GH_TOKEN(classic PAT,repo scope)
 ```
 
 装好后在 Claude Code 里用 `/upstream-pr` 触发。
 
-## 配置(`~/.octo-pr-watch/config`)
+## 配置(`~/.upstream-pr-watch/config`)
 
 | key | 说明 |
 |---|---|
-| `OCTO_WEBHOOK_URL` | IM 出站通知端点(https),载荷 `{"content":"<markdown>"}` |
+| `WEBHOOK_URL` | IM 出站通知端点(https),载荷 `{"content":"<markdown>"}` |
 | `UPSTREAM` | 目标上游仓库 `<org>/<repo>`(PR base) |
 | `FORK_OWNER` | 你的 GitHub 用户名(PR head) |
 | `POLL_INTERVAL` | 轮询秒数(默认 90) |

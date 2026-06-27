@@ -8,9 +8,9 @@
 #   watchctl.sh cleanup
 set -uo pipefail
 
-CFG="${OCTO_PR_WATCH_DIR:-$HOME/.octo-pr-watch}/config"
+CFG="${PR_WATCH_DIR:-$HOME/.upstream-pr-watch}/config"
 [ -f "$CFG" ] && . "$CFG"
-BASE_DIR="${OCTO_PR_WATCH_DIR:-$HOME/.octo-pr-watch}"
+BASE_DIR="${PR_WATCH_DIR:-$HOME/.upstream-pr-watch}"
 
 alive() { local p; p=$(cat "$1/watcher.pid" 2>/dev/null) && [ -n "$p" ] && kill -0 "$p" 2>/dev/null; }
 
