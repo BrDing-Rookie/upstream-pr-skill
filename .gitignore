@@ -1,0 +1,14 @@
+# 真实运行配置(含 webhook 密钥)——永不提交
+config
+/.octo-pr-watch/
+*.local
+
+# 守护进程运行态
+**/watcher.pid
+**/watcher.log
+**/state.json
+
+# 杂项
+.DS_Store
+*.swp
+*.tmp
