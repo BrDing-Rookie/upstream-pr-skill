@@ -53,6 +53,10 @@ scripts/watch_pr.sh --pr <pr> --detach
 - 首轮"预热":把已有 review 记为已读(不补发历史),并发一条"开始监听"。
 - **merged/closed → 推终态 → 删 pid → 退出**;连续拉取失败/超 `MAX_AGE_DAYS` → 告警后退出。
 - 通知走 IM incoming webhook,载荷 `{"content":"<markdown>"}`。
+- **@ 触发 bot(可选)**:config `MENTION_ROUTES`(JSON `{事件:url}`)把某事件路由到一个
+  **人工预配了 `mention_uids=[bot]` 的专用 webhook**;发到该 url 时服务端自动 @ 该 bot 触发它。
+  skill 不构造 mention、不调 IM 管理接口;@ 目标全在目标 webhook 的服务端配置里。未路由事件落回 `WEBHOOK_URL`。
+  可用 `MENTION_PROMPT_<event>`(支持 `{pr}/{url}/{title}`)给 bot 附指令。
 
 ## 生命周期(`scripts/watchctl.sh`)
 `list` / `status <pr>` / `stop <pr>` / `stop-all` / `cleanup`(清死 pid 与过期 state)。

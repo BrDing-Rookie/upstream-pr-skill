@@ -36,11 +36,28 @@ install.sh              # 复制 skill 到 ~/.claude/skills/ + 初始化 config
 | key | 说明 |
 |---|---|
 | `WEBHOOK_URL` | IM 出站通知端点(https),载荷 `{"content":"<markdown>"}` |
+| `MENTION_ROUTES` | (可选) JSON map `{事件: push_url}`,把某事件路由到「会 @ bot」的专用 webhook;未列出的落回 `WEBHOOK_URL` |
+| `MENTION_PROMPT_<event>` | (可选) 给被触发 bot 附的指令,支持 `{pr}/{url}/{title}` |
 | `UPSTREAM` | 目标上游仓库 `<org>/<repo>`(PR base) |
 | `FORK_OWNER` | 你的 GitHub 用户名(PR head) |
 | `POLL_INTERVAL` | 轮询秒数(默认 90) |
 | `WATCH_EVENTS` | 触发推送的事件:`request_changes,approved,merged,closed` |
 | `MAX_AGE_DAYS` | 守护进程硬过期(默认 14) |
+
+## @ 触发 bot(可选)
+
+某事件想在群里 **@ 一个 bot 并触发它反馈**(例:request changes 时 @ 代码 bot)时:
+
+1. **人工**(一次性)用 IM 的 webhook 管理接口建一个 incoming-webhook,配置 `mention_uids=[bot_uid]`
+   (bot 须先是目标群成员)。skill 不碰管理接口、不改 IM 服务端。
+2. 把该 webhook 的 push URL 写进 `MENTION_ROUTES` 对应事件,例如:
+   ```
+   MENTION_ROUTES='{"request_changes":"https://<host>/api/v1/incoming-webhooks/<iwh_bot>/<token>"}'
+   MENTION_PROMPT_request_changes='请阅读 PR #{pr} 的 review 意见并给出修改建议:{url}'
+   ```
+3. 守护进程在该事件发生时就 POST 到这个 URL → 服务端按其配置自动 @ bot → bot 被触发,读消息正文(含上面 prompt)做反馈。
+
+> @ 目标完全由目标 webhook 的服务端配置决定;skill 只负责「往哪个 URL 发什么内容」,不自行构造 mention。
 
 ## 隐私
 

@@ -5,6 +5,18 @@
 # IM incoming webhook(出站通知端点,POST {"content":"<markdown>"});必填,https
 WEBHOOK_URL='https://<your-im-host>/api/v1/incoming-webhooks/<id>/<token>'
 
+# (可选) 按事件路由到「会 @ 某 bot」的专用 webhook —— JSON map {事件: push_url}。
+# 该 url 指向的 webhook 需由人类预先配好 mention_uids=[bot_uid](且 bot 已在目标群),
+# 这样这条消息发出时服务端会自动 @ 那个 bot 并触发它。未列出的事件落回 WEBHOOK_URL(纯通知)。
+# 事件名:start / request_changes / approved / merged / closed / expiry / error
+MENTION_ROUTES='{}'
+# 例:request changes 时 @ 某代码 bot
+#   MENTION_ROUTES='{"request_changes":"https://<host>/api/v1/incoming-webhooks/<iwh_bot>/<token>"}'
+
+# (可选) 给被触发 bot 附的指令上下文,按事件设 MENTION_PROMPT_<event>,支持 {pr}/{url}/{title}。
+# 仅在该事件有内容时追加到消息末尾。
+#   MENTION_PROMPT_request_changes='请阅读 PR #{pr} 的 review 意见并给出修改建议:{url}'
+
 # 目标上游仓库(base)与你的 fork owner(head);必填
 UPSTREAM='<org>/<repo>'
 FORK_OWNER='<your-github-username>'
